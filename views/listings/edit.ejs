@@ -1,0 +1,80 @@
+<% layout('/layouts/boilerplate') -%>
+
+        <div class="row mt-3">
+            <div class="col-8 offset-2">
+                <h3>Edit your Listing</h3>
+                <form method="POST" action="/listings/<%=listing._id %>?_method=PUT" novalidate class="needs-validation" enctype="multipart/form-data">
+
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Title</label>
+                        <input type="text" name="listing[title]" value="<%= listing.title %>" class="form-control" required>
+                        <div class="invalid-feedback">Please Enter valid title</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea name="listing[description]" cols="30" rows="10"
+                            class="form-control Dec" required><%= listing.description %></textarea>
+                            <i class="fa-solid fa-wand-magic-sparkles iconMagic"  onclick="run()" ></i>
+                            <div class="invalid-feedback">Please Enter Description</div>
+                    </div>
+                    <div class="mb-3">
+                        Original Listing Image <br/>
+                        <img src="<%= oriLink %>" alt="Previous Image ">
+                    </div>
+                    <div class="mb-3">
+                        <label for="image" class="form-label">Image</label>
+                        <input type="file" name="listing[image]" class="form-control" >
+                        <div class="invalid-feedback" >Image URL Required </div>
+                    </div>
+                    <div class="row">
+                        <div class="mb-3 col-md-4">
+                            <label for="price" class="form-label">Price</label>
+                            <input type="number" name="listing[price]" value="<%= listing.price %>"
+                                class="form-control" required>
+                                <div class="invalid-feedback">Enter Valid Price </div>
+                        </div>
+                        <div class="mb-3 col-md-8">
+                            <label for="country" class="form-label">Country</label>
+                            <input type="text" name="listing[country]" value="<%= listing.country %>"
+                                class="form-control" required>
+                                <div class="invalid-feedback">Please Enter Country</div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="location" class="form-label">Location</label>
+                        <input type="text" name="listing[location]" value="<%= listing.location %>"
+                            class="form-control" required>
+                        <div class="invalid-feedback">Please Enter Location</div>
+                    </div>
+
+
+                    <button class="btn btn-dark edit-btn mt-3 mb-2">Add</button>
+
+
+                </form>
+            </div>
+        </div>
+        <script >
+            async function run() {
+               const DecritiopnEle = document.querySelector(".Dec");
+               const DecText = DecritiopnEle.value;
+               console.log("Input Text:", DecText);
+   
+               try {
+                   const response = await fetch('http://localhost:8080/generate', {  // Update the URL to your backend server
+                       method: 'POST',
+                       headers: { 'Content-Type': 'application/json' },
+                       body: JSON.stringify({ prompt: `Give me Anoter Description for hotel description give me simple text response and write simple english words and wirte in 50 words also include emoji in response ${DecText}` })
+                   });
+   
+                   const data = await response.json();
+                   console.log("AI Response:", data.text);
+   
+                   // Optionally, update the textarea with the AI response
+                   DecritiopnEle.value = data.text;
+               } catch (error) {
+                   console.error("Error generating content:", error);
+               }
+           }
+</script>
+<script src="/js/script.js"></script>

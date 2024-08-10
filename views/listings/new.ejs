@@ -1,0 +1,82 @@
+<% layout('/layouts/boilerplate') -%>
+
+    <body>
+        <div class="row">
+
+            <div class="col-8 offset-2">
+                <br><br>
+                <h3>Create A New Listing</h3>
+                <form method="post" action="/listings" novalidate class="needs-validation" enctype="multipart/form-data" >
+                    <div class="mb-3 ">
+                        <lable for="title" class="form-label">Title</lable>
+                        <input name="listing[title]" placeholder="Enter Catchy Title" type="text" class="form-control" required>
+                        <div class="valid-feedback">Look's Good</div>
+                        <div class="invalid-feedback">Please Enter valid title</div>
+                    </div>
+                    <div class="mb-3 ">
+                        <lable for="description" class="form-label">description</lable>
+                        <textarea name="listing[description]" placeholder="Enter description" type="text"
+                            class="form-control    Dec" required  rows="7"   ></textarea>
+                            <div class="invalid-feedback  Dec">Please Enter Description </div>
+                            
+                            <i class="fa-solid fa-wand-magic-sparkles iconMagic"  onclick="run()" ></i>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="image" class="form-label">Upload Listing Iamge</label>
+                        <input type="file" class="form-control" name="listing[image]" required>
+                    </div>
+
+                    <div class="row">
+
+
+                        <div class="mb-3 col-md-4 ">
+                            <label for="price" class="form-label">Price</label>
+                            <input name="listing[price]" placeholder="/ Night" class="form-control"  type="number" required>
+                            <div class="invalid-feedback">Please Enter valid price</div>
+                        </div>
+                        <div class="mb-3 col-md-8">
+                            <label for="country" class="form-label">Country</label>
+                            <input name="listing[country]" placeholder="Ex. India" type="text" class="form-control" required>
+                            <div class="invalid-feedback">Enter Country</div>
+                        </div>
+                    </div>
+                    <div class="mb-3 ">
+                        <label for="location" class="form-label">Location</label>
+                        <input name="listing[location]" placeholder="Mumbai, Maharashtra" type="text" class="form-control" required>
+                        <div class="invalid-feedback">Enter Location</div>
+                    </div>
+
+
+                    <button class="btn btn-dark add-btn">Add</button>
+
+                    <br><br>
+                </form>
+            </div>
+        </div>
+        <script >
+            async function run() {
+               const DecritiopnEle = document.querySelector(".Dec");
+               const DecText = DecritiopnEle.value;
+               console.log("Input Text:", DecText);
+   
+               try {
+                   const response = await fetch('http://localhost:8080/generate', {  // Update the URL to your backend server
+                       method: 'POST',
+                       headers: { 'Content-Type': 'application/json' },
+                       body: JSON.stringify({ prompt: `Give me Anoter Description for hotel description give me simple text response and write simple english words and wirte in 50 words also include emoji in response ${DecText}` })
+                   });
+   
+                   const data = await response.json();
+                   console.log("AI Response:", data.text);
+   
+                   // Optionally, update the textarea with the AI response
+                   DecritiopnEle.value = data.text;
+               } catch (error) {
+                   console.error("Error generating content:", error);
+               }
+           }
+       </script>
+    </body>
+
+   
