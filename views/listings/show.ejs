@@ -6,32 +6,39 @@
 </script>
   <body>
 
-    <div class="row  mt-3">
-      <div class="col-8 offset-2">
-        <h3>
-          <%= listing.title %>
-        </h3>
-        <div class="card col-6 offset-3 show-card listing-card">
-
-          <img class="card-img-top show-img" src="<%= listing.image.url %>" alt="Listing Image" height="400rem">
-          <div class="card-body">
-            <p class="card-text">
-             <p class="card-text"> <i>Owned by - <%= listing.owner.username %></i></p>
-            <p class="card-text"><%= listing.description %></p>
-            <p class="card-text"><% // tolocaleString is for adding , in price with indian standard %>
-              <% if (listing.price !==null && listing.price !==undefined) { %>
-                &#8377 <%= listing.price.toLocaleString("en-In") %> / night
-                  <% } else { %>
-                    Price not available
-                    <% } %> </p>
-            <p class="card-text"><%= listing.location %>  </p>
-            <p class="card-text"><%= listing.country%></p>
-                            
-            
-          </div>
-        </div>
+    <div class="row mt-3 show-container">
+      <div class="col-sm-8 offset-sm-2 tittle">
+          <h3>
+              <%= listing.title %>
+          </h3>
       </div>
-
+      <div class="card col-sm-8 offset-sm-2 show-card listing-card">
+          <div id="listing_image">
+              <img src="<%= listing.image.url %>" class="show-img card-img-top" alt="listing_image">
+          </div>
+          <div class="card-body">
+              <p class="card-text"> <b>Owned by : </b><i>
+                      @<%= listing.owner.username %>
+                  </i> </p>
+              <p class="card-text">
+                  <b>Description : </b>
+                  <%= listing.description %>
+              </p>
+              <p class="card-text">
+                  <b>Price : </b>
+                   &#8377; <%= listing.price.toLocaleString("en-IN") %> / night
+              </p>
+              <p class="card-text">
+                  <b>Location : </b>
+                  <%= listing.location %>
+              </p>
+              <p class="card-text">
+                  <b>Country : </b>
+                  <%= listing.country %>
+              </p>
+          </div>
+      </div>
+  
       <% if( currUser &&  currUser._id.equals(listing.owner._id)) { %>
       <div class="Btns offset-2 mb-3">
 
@@ -78,29 +85,47 @@
         </form>
         <% } %> 
         
-        
-        <div class="row">
-        <% for(review of listing.reviews) { %>
-          <div class="card col-5 ms-3 mb-3">
-            <div class="card-body">
-              <h5 class="card-title">@<%= review.author.username %></h5>
-              <p class="starability-result card-text" data-rating="<%= review.rating %>"></p>
-              <p class="card-text"><%= review.comment %></p>
-            </div>
-            <% if( currUser &&  currUser._id.equals(review.author._id)) { %>
-            <form   method="post" action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE"   class="mb-3">
-              <button class="btn btm-sm  btn-dark">Delete</button>
-            </form>
-            <% } %> 
-          </div>
-        <% } %>
+        <% if(listing.reviews.length > 0) { %>
+          <hr>
+      <div class="row review-sec">
+          <p><b>All Reviews</b></p>
+          <% for(review of listing.reviews) { %>
+              <div class="card review-card col-sm-5 mb-3 ms-sm-3">
+                  <div class="card-body mb-3">
+                      <h5 class="card-title">@<%= review.author.username %>
+                      </h5>
+                      <p class="starability-result card-text" data-rating="<%= review.rating %>">
+                      </p>
+                      <p class="card-text">
+                          <%= review.comment %>
+                      </p>
+                  </div>
+
+                  <% if( currUser &&  currUser._id.equals(review.author._id)) {  %>
+                      <form method="POST"
+                      action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE"
+                      class="p-2 my-3 mb-3">
+                      <button class="review-btn">
+                        <i class="fa-solid fa-eraser"></i>
+                        </button>
+                  </form>
+                  <% } %>
+                  
+              </div>
+              <% } %>
       </div>
+      <% } %>
+  </div>
+
+  <hr style="margin: 10px 0px;">
+
+  <div class="col-sm-8 offset-sm-2 mb-3 ">
+      <div class="tittle map-tittle">
+          <h3>Where you'll be </h3>
+          <i class="fa-regular fa-compass fa-spin fa-2xs" style="color: #000000;"></i></i>
       </div>
-      <div class="col-8 offset-3 mb-3">
-        <h3>Where You'll be</h3>
-        <div id="map"></div>
-        
-      </div>
-    </div>
+      <div id="map"></div>
+  </div>
+</div>
     <script src="/js/map.js"></script>
   </body>
